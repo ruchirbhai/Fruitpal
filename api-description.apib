@@ -1,0 +1,12 @@
+FORMAT: 1A
+
+# GET /commodities
++ Response 200 (application/json)
+
+      {"COMMODITIES":["mango","pineapple","apple"]}
+# GET /prices?commodity=pineapple&price_per_trade=100&volume_in_tons=1
+
++ Response 200 (application/json)
+
+      {"PRICES":[{"COST":"102.58","COUNTRY":"BR"}]}
+
