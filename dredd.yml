@@ -13,7 +13,7 @@ reporter: apiary
 output: []
 header: []
 sorted: false
-user: mango:apple
+user: null
 inline-errors: false
 details: false
 method: []

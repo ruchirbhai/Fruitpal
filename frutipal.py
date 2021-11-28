@@ -1,24 +1,46 @@
 from draughtsman import parse
-import sys
+import apiRequest
+import requests
 
-from refract.elements.primitives import String
+
+base_URL = "https://fruitpal.doma.com/"
+def request(http_verb,path,data,params):
+    api_request = apiRequest.APIRequest(base_URL)
+    print(http_verb,path,data,params)
+    response = api_request(http_verb,path,data=data,params=params)
+    if response.status_code == 200:
+        print(response.json())
+    
+# from refract.elements.primitives import String
 
 file = open("api-description.apib", 'r')
 parse_result = parse(file.read())
 
 for elem in parse_result.api.content:
-    request = elem.transitions[0].transactions[0].request.defract
+    # req = elem.transitions[0].transactions[0].request.defract
     response = elem.transitions[0].transactions[0].response.defract
-    transaction_type = elem.transitions[0].transactions[0].request.element
+    transaction_type = elem.transitions[0].transactions[0].request.method.defract
     endpoint = elem.href.defract
+    if 'hrefVariables' in elem.transitions[0].attributes.attributes:
+        attrib = elem.transitions[0].attributes.attributes['hrefVariables'].defract
+        print(attrib)
+        attrib = dict(attrib)
+    else:
+        attrib = None
+    
+    
+    req1 = request(transaction_type, endpoint, None, attrib)
+    print(req1)
+
 
     #print request and response
 
-    print("transaction_type= ", transaction_type)
-    print("endpoint= ", endpoint)
-    print("Request= ", request)
+    # print("transaction_type= ", transaction_type)
+    # print("endpoint= ", endpoint)
+    # print("Attributes= ", attrib)
+    # print("Request= ", request)
     print("Response= ", response)
-    
+
 # print("Basic API defract")
 
 # print(parse_result.api.defract)

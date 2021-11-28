@@ -1,10 +1,16 @@
 FORMAT: 1A
+# FruitPal API Doc
 
 # GET /commodities
 + Response 200 (application/json)
 
       {"COMMODITIES":["mango","pineapple","apple"]}
-# GET /prices?commodity=pineapple&price_per_trade=100&volume_in_tons=1
+
+# GET /prices
++ Parameters
+    + commodity(string, optional,`pineapple`) - This is the id for commodities 
+    + price_per_trade(float,optional,`100`) - This is the id price per trade 
+    + volume_in_tons(number, optional, `1`) - This is the id for volume in tons 
 
 + Response 200 (application/json)
 
