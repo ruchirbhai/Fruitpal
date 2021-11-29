@@ -1,11 +1,6 @@
 from draughtsman import parse
 import apiRequest
-# from genson import SchemaBuilder
-# from jsonSchemaConv import SchemaGenerator
-# import requests
-# from json2schema import JSON2Schema
-#import SchemaGenerator
-# from json_schema_generator2 import generator
+import jsonschema
 from jsonschema import validate
 import json
 
@@ -23,6 +18,18 @@ def request(http_verb,path,data,params):
         return response.json()
     elif response.status_code == 401:
         return ({"error":"HTTP 401"})
+
+def validateJson(jsonInstance,expSchemaFile):
+        with open(expSchemaFile,'r') as file:
+            expSchema = json.load(file)
+
+        # print(expetedSchema)
+        try:
+            validate(instance=jsonInstance, schema=expSchema)
+        except jsonschema.exceptions.ValidationError as err:
+            print(err)
+            err = "Given JSON data is InValid"
+            return False, err
 
 def parseDoc(filename):
     file = open(filename, 'r')
@@ -43,33 +50,14 @@ def parseDoc(filename):
         
         req1 = request(transaction_type, endpoint, None, attrib)
         print(req1)
-
-        #print request and response
-        # print("transaction_type= ", transaction_type)
-        # print("endpoint= ", endpoint)
-        # print("Attributes= ", attrib)
-        # print("Request= ", request)
-        # print("Response= ", response)
-        # expJsonSchema = SchemaBuilder()
-        # expJsonSchema.add_schema(response)
-
+        validateJson(req1,'expSchema.json')
         # print(expSchema)
-        with open('expSchema.json','r') as file:
-            expetedSchema = json.load(file)
+        # with open('expSchema.json','r') as file:
+        #     expetedSchema = json.load(file)
 
-        # print(expetedSchema)
-        print(validate(instance=req1, schema=expetedSchema))
-        # is_valid, msg = validate_json(jsonData)
-        # print(msg)
-        # # recJsonSchema = SchemaBuilder()
-        # # recJsonSchema.add_schema(req1)
-        # recSchema = generator(req1)
-        # print(recSchema)
-        # # # print("Print Schema",expJsonSchema.to_schema())
-        # if expSchema == recSchema:
-        #     print("Schema as expected")
-        # else:
-        #     print("Schema Mismatch")
+        # # print(expetedSchema)
+        # print(validate(instance=req1, schema=expetedSchema))
+
 
 # Parse API doc
 docToArgs = parseDoc(api_doc)

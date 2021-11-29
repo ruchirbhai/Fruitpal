@@ -22,7 +22,7 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "COST": {
+                "COST1": {
                     "type": "string"
                 },
                 "COUNTRY": {
