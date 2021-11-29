@@ -55,7 +55,7 @@ def parseDoc(filename,transaction_type=None,endpoint=None,attrib=None):
                 attrib = dict(attrib)
         
         req1 = request(transaction_type, endpoint, None, attrib)
-        print(req1)
+        # print(req1)
         res,errMsg = validateJson(req1,'expSchema.json')
         if res == False:
             print(errMsg)
