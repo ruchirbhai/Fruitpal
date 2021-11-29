@@ -1,8 +1,10 @@
+from logging import exception
 from draughtsman import parse
 import apiRequest
 import jsonschema
 from jsonschema import validate
 import json
+import socketserver
 
 
 base_URL = "https://fruitpal.doma.com/"
@@ -26,38 +28,39 @@ def validateJson(jsonInstance,expSchemaFile):
         # print(expetedSchema)
         try:
             validate(instance=jsonInstance, schema=expSchema)
-        except jsonschema.exceptions.ValidationError as err:
-            print(err)
-            err = "Given JSON data is InValid"
+            return True, ""
+        except Exception as err:
+            # print(err)
+            # errMsg = "Given JSON data is InValid"
             return False, err
-
-def parseDoc(filename):
+        
+def parseDoc(filename,transaction_type=None,endpoint=None,attrib=None):
     file = open(filename, 'r')
     parse_result = parse(file.read())
 
     for elem in parse_result.api.content:
         # req = elem.transitions[0].transactions[0].request.defract
-        response = elem.transitions[0].transactions[0].response.defract
+        # response = elem.transitions[0].transactions[0].response.defract
+        # if transaction_type == None:
+        #     transaction_type = elem.transitions[0].transactions[0].request.method.defract
+        # if endpoint == None:
+        #     endpoint = elem.href.defract
         transaction_type = elem.transitions[0].transactions[0].request.method.defract
         endpoint = elem.href.defract
-        if 'hrefVariables' in elem.transitions[0].attributes.attributes:
-            attrib = elem.transitions[0].attributes.attributes['hrefVariables'].defract
-            # print(attrib)
-            attrib = dict(attrib)
-        else:
-            attrib = None
-        
+
+        if attrib == None:
+            if 'hrefVariables' in elem.transitions[0].attributes.attributes:
+                attrib = elem.transitions[0].attributes.attributes['hrefVariables'].defract
+                # print(attrib)
+                attrib = dict(attrib)
         
         req1 = request(transaction_type, endpoint, None, attrib)
         print(req1)
-        validateJson(req1,'expSchema.json')
-        # print(expSchema)
-        # with open('expSchema.json','r') as file:
-        #     expetedSchema = json.load(file)
-
-        # # print(expetedSchema)
-        # print(validate(instance=req1, schema=expetedSchema))
-
+        res,errMsg = validateJson(req1,'expSchema.json')
+        if res == False:
+            print(errMsg)
+            return req1, errMsg
+    return req1
 
 # Parse API doc
 docToArgs = parseDoc(api_doc)
