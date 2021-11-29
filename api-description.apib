@@ -1,11 +1,6 @@
 FORMAT: 1A
 # FruitPal API Doc
 
-# GET /commodities
-+ Response 200 (application/json)
-
-      {"COMMODITIES":["mango","pineapple","apple"]}
-
 # GET /prices
 + Parameters
     + commodity(string, optional,`pineapple`) - This is the id for commodities 
@@ -15,4 +10,3 @@ FORMAT: 1A
 + Response 200 (application/json)
 
       {"PRICES":[{"COST":"102.58","COUNTRY":"BR"}]}
-
